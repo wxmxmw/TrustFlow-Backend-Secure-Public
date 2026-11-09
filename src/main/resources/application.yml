@@ -1,0 +1,79 @@
+server:
+  port: 8080
+  tomcat:
+    max-http-form-post-size: 50MB
+    max-swallow-size: 50MB
+
+spring:
+  application:
+    name: TrustFlow-backend
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/trustflow_db}
+    username: ${DB_USERNAME:trustflow}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      pool-name: TrustFlowPool
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  flyway:
+    enabled: false
+  mvc:
+    async:
+      request-timeout: 300000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.trustflow.backend: INFO
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    expMinutes: ${JWT_EXP_MINUTES:1440}
+
+blockchain:
+  rpc-url: ${RPC_URL:}
+  private-key: ${PRIVATE_KEY:}
+  contract-address: ${CONTRACT_ADDRESS:}
+  contract-abi-path: classpath:chain/ProofRegistry.json
+  # Timeout in seconds
+  timeout: 60
+app:
+  upload-dir: ./uploads/
+  embedding:
+    api-url: https://api.siliconflow.cn/v1/embeddings
+    api-key: ${SILICONFLOW_API_KEY}
+    model: BAAI/bge-m3
+  rag:
+    top-k: 5
+    similarity-threshold: 0.6
+  llm:
+    api-url: https://api.siliconflow.cn/v1/chat/completions
+    api-key: ${SILICONFLOW_API_KEY}
+    model: zai-org/GLM-4.5
+  image:
+    api-url: https://api.siliconflow.cn/v1/images/generations
+    api-key: ${SILICONFLOW_API_KEY}
+    model: black-forest-labs/FLUX.1-schnell
+    output-dir: ./storage/generated/

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TrustFlow wallet sign in</title>
+  <style>
+    body { font: 16px system-ui, sans-serif; max-width: 36rem; margin: 3rem auto; padding: 0 1rem; }
+    label, button { display: block; margin-top: 1rem; }
+    input, button { box-sizing: border-box; width: 100%; padding: .7rem; font: inherit; }
+    output { display: block; margin-top: 1rem; overflow-wrap: anywhere; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>TrustFlow wallet sign in</h1>
+  <p>Get a nonce from the backend, connect your wallet, then sign the nonce to log in. Only sign a nonce you requested.</p>
+  <button id="connect" type="button">Connect MetaMask</button>
+  <label for="wallet">Wallet address</label>
+  <input id="wallet" autocomplete="off" readonly>
+  <label for="nonce">Nonce from /api/v1/auth/nonce</label>
+  <input id="nonce" autocomplete="off">
+  <button id="sign" type="button">Sign nonce</button>
+  <output id="result" aria-live="polite"></output>
+  <script>
+    const wallet = document.getElementById('wallet');
+    const nonce = document.getElementById('nonce');
+    const result = document.getElementById('result');
+    async function connect() {
+      if (!window.ethereum) throw new Error('MetaMask is unavailable');
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (!accounts.length) throw new Error('No wallet account selected');
+      wallet.value = accounts[0];
+    }
+    document.getElementById('connect').onclick = async () => {
+      try { await connect(); result.textContent = 'Wallet connected.'; }
+      catch (error) { result.textContent = error.message; }
+    };
+    document.getElementById('sign').onclick = async () => {
+      try {
+        if (!wallet.value) await connect();
+        if (!nonce.value.trim()) throw new Error('Enter a nonce first');
+        const signature = await window.ethereum.request({
+          method: 'personal_sign', params: [nonce.value.trim(), wallet.value]
+        });
+        result.textContent = `Signature: ${signature}`;
+      } catch (error) { result.textContent = error.message; }
+    };
+  </script>
+</body>
+</html>

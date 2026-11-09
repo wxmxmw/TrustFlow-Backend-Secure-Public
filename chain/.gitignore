@@ -1,0 +1,4 @@
+node_modules/
+.env
+# Keep deployment output local when it contains environment details.
+deploy/deployed.json

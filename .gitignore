@@ -1,0 +1,58 @@
+# Maven
+/target/
+
+# IDE
+/.idea/
+*.iml
+.project
+.classpath
+.settings/
+/.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+**/*.log
+
+# Env and local configs
+.env
+*.env
+.env.*
+!.env.example
+!chain/.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# VS & IDE
+.vs/
+.idea/
+
+# Maven
+target/
+
+# Node modules
+node_modules/
+
+# Hardhat build artifacts and cache
+chain/artifacts/
+chain/cache/
+chain/typechain-types/
+
+# Storage and uploads
+storage/
+uploads/
+
+# Test files and generated data
+test*.pdf
+test*.docx
+*.pdf
+*.docx
+*.png
+*_test_info.json
+*_verification.json
+report.md
